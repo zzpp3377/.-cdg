@@ -130,6 +130,15 @@ void vEnd(){
 
     endwin();
 }
+
+
+//------------------------------------------------
+//function: iGetMin(int,int)
+//-----------------------------------------------
+int iGetMin(int a,int b){
+    return a<b?a:b;
+}
+
 //-------------------------------------------------
 //function : vMainLoop()
 //-------------------------------------------------
@@ -150,8 +159,8 @@ void vMainLoop(){
                 }
                 break;
             case KEY_DOWN :
-                if( explr.iCursesY+1 < explr.iShellBottom-explr.iShellTop ) move( ++explr.iCursesY , explr.iCursesX );
-                else if( explr.iShellBottom < explr.iContentDir+explr.iContentFile ){
+                if( explr.iCursesY+1 < iGetMin(explr.iShellBottom-explr.iShellTop,explr.iContentDir+explr.iContentFile) ) move( ++explr.iCursesY , explr.iCursesX );
+                else if( explr.iCursesY+1==explr.iShellBottom-explr.iShellTop && explr.iShellBottom < explr.iContentDir+explr.iContentFile ){
                     explr.iShellTop++;
                     explr.iShellBottom++;
                     vShowContent();
