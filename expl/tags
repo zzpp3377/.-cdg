@@ -13,15 +13,15 @@ _stdlib_h_	include/list.h	3;"	d
 _stdlib_h_	list/list.h	3;"	d
 _strList_h_	include/strList.h	2;"	d
 _strList_h_	list/strList.h	2;"	d
-cContentDir	explore.c	/^char cContentDir[100][100]={0,0};$/;"	v
-cContentFile	explore.c	/^char cContentFile[100][100]={0};$/;"	v
 error	explore.c	/^char *error[]={$/;"	v
+exp	explore.c	/^explore exp;$/;"	v
+explore	explore.c	/^} explore;$/;"	t	typeref:struct:__anon1	file:
 iAddLast	list.c	/^int iAddLast( Node* head,void* pContent){$/;"	f
 iAddLast	list/list.c	/^int iAddLast( Node* head,void* pContent){$/;"	f
-iContentDir	explore.c	/^int iContentDir=0;$/;"	v
-iContentFile	explore.c	/^int iContentFile=0;$/;"	v
-iCursesX	explore.c	/^int iCursesX=0;$/;"	v
-iCursesY	explore.c	/^int iCursesY=0;$/;"	v
+iContentDir	explore.c	/^    int iContentDir=0;$/;"	m	struct:__anon1	file:
+iContentFile	explore.c	/^    int iContentFile=0;$/;"	m	struct:__anon1	file:
+iCursesX	explore.c	/^    int iCursesX=0;$/;"	m	struct:__anon1	file:
+iCursesY	explore.c	/^    int iCursesY=0;$/;"	m	struct:__anon1	file:
 iDeleteList	list.c	/^int iDeleteList( Node* head ){$/;"	f
 iDeleteList	list/list.c	/^int iDeleteList( Node* head ){$/;"	f
 iDeleteListStr	list/strList.c	/^int iDeleteListStr(Node* head){$/;"	f
@@ -35,6 +35,8 @@ iPush	list.c	/^int iPush( Node* head, void* pContent ){$/;"	f
 iPush	list/list.c	/^int iPush( Node* head, void* pContent ){$/;"	f
 iPushStr	list/strList.c	/^int iPushStr(Node * head,char * str){$/;"	f
 iPushStr	strList.c	/^int iPushStr(Node * head,char * str){$/;"	f
+iShellBottom	explore.c	/^    int iShellBottom=0;$/;"	m	struct:__anon1	file:
+iShellTop	explore.c	/^    int iShellTop=0;$/;"	m	struct:__anon1	file:
 main	explore.c	/^int main(int argc,char *argv[]){$/;"	f
 main	list/test.c	/^int main(){$/;"	f
 next	include/list.h	/^    struct Node * next;$/;"	m	struct:Node	typeref:struct:Node::Node
@@ -44,8 +46,9 @@ pContent	list/list.h	/^    void * pContent;$/;"	m	struct:Node
 pCreatStrList	strList.c	/^Node * pCreatStrList(){$/;"	f
 pCreateList	list.c	/^Node* pCreateList(){$/;"	f
 pCreateList	list/list.c	/^Node* pCreateList(){$/;"	f
-pDirHead	explore.c	/^Node * pDirHead;$/;"	v
-pFileHead	explore.c	/^Node * pFileHead;$/;"	v
+pDirHead	explore.c	/^    Node * pDirHead=NULL;$/;"	m	struct:__anon1	file:
+pFileHead	explore.c	/^    Node * pFileHead=NULL;$/;"	m	struct:__anon1	file:
+pGetWinSize	explore.c	/^void pGetWinSize(int * col,int *row){$/;"	f
 pPop	list.c	/^void * pPop(Node* head){$/;"	f
 pPop	list/list.c	/^void * pPop(Node* head){$/;"	f
 pPopStr	list/strList.c	/^char * pPopStr(Node* head){$/;"	f
@@ -54,6 +57,7 @@ pRemove	list.c	/^void * pRemove( Node * head,int index ){$/;"	f
 pRemove	list/list.c	/^void * pRemove( Node * head,int index ){$/;"	f
 pRemoveLast	list.c	/^void* pRemoveLast(Node* head){$/;"	f
 pRemoveLast	list/list.c	/^void* pRemoveLast(Node* head){$/;"	f
+path	explore.c	/^    char * path=NULL;$/;"	m	struct:__anon1	file:
 vEnd	explore.c	/^void vEnd(){$/;"	f
 vGetContent	explore.c	/^void vGetContent(DIR * dirCurrentDir){$/;"	f
 vInit	explore.c	/^void vInit(){$/;"	f
