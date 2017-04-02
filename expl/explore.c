@@ -34,14 +34,15 @@ WINDOW * wndNewWindow=NULL;
 
 
 //------------------------------------------------------
-//function: pGetWinSize
+//function: vGetWinSize
 //input:int * col,int* row    ///input!=NULL
 //------------------------------------------------------
-void pGetWinSize(int * col,int *row){
+void vGetWinSize(struct explore * pexplr){
     struct winsize size;
     ioctl(STDIN_FILENO,TIOCGWINSZ,&size);
-    *col=size.ws_col;
-    *row=size.ws_row;
+//    *col=size.ws_col;
+    pexplr->iShellBottom =size.ws_row;
+    pexplr->iShellTop=0;
 }
 
 //-----------------------------------------------------------
@@ -63,35 +64,47 @@ void vGetContent(DIR * dirCurrentDir){
             iPushStr(explr.pFileHead,deCurrentDirEnt->d_name);
             explr.iContentFile++;
         }
-
     }
-    
 }
 
 //----------------------------------------------------------
 //function : vShowContent()
 //---------------------------------------------------------
 void vShowContent(){
-    int i=0;
+    int j=0;
     int col,row;
     Node* point;
     point =explr.pDirHead;
     clear();
-    while(point->next!=NULL){
+
+    for( j=0; j<explr.iShellTop ;j++ ){
+        if( j==explr.iContentDir ){
+            point=explr.pFileHead->next;
+        }
         point=point->next;
-        mvprintw(i,0,"%s/",(char*)point->pContent);
-        i++;
     }
-    point =explr.pFileHead;
-    while(point->next!=NULL){
-        point=point->next;
-        mvprintw(i,0,"%s",(char*)point->pContent);
-        i++;
+    if( j<explr.iContentDir ){
+        while(point->next!=NULL&&j<explr.iShellBottom){
+            point=point->next;
+            mvprintw( j-explr.iShellTop,0,"%s/",(char*)point->pContent );
+            j++;
+        }
+        point =explr.pFileHead;
+        while(point->next!=NULL&&j<explr.iShellBottom){
+            point=point->next;
+            mvprintw( j-explr.iShellTop,0,"%s",(char*)point->pContent );
+            j++;
+        }
+    }else{ 
+        while(point->next!=NULL&&j<explr.iShellBottom){
+            point=point->next;
+            mvprintw( j-explr.iShellTop,0,"%s",(char*)point->pContent );
+            j++;
+        }
     }
-    
-    move(0,0);
-    explr.iCursesY = 0;
-    explr.iCursesX = 0;
+//    move(0,0);
+//    explr.iCursesY = 0;
+//    explr.iCursesX = 0;
     refresh();
 }
 
@@ -111,8 +124,6 @@ void vInit(){
 //function : vEndWindow
 //---------------------------------------------------
 void vEnd(){
-//    while(!iIsEmptyStr(explr.pDirHead))pPopStr(explr.pDirHead);
-//    while(!iIsEmptyStr(explr.pFileHead))pPopStr(explr.pFileHead);
     iDeleteListStr(explr.pDirHead); 
     iDeleteListStr(explr.pFileHead);
 
@@ -129,9 +140,23 @@ void vMainLoop(){
         
         switch( key ){
             case KEY_UP  :
-                if( explr.iCursesY-1 >=0 ) move( --explr.iCursesY , explr.iCursesX );break;
+                if( explr.iCursesY-1 >=0  ) move( --explr.iCursesY , explr.iCursesX );
+                else if( explr.iShellTop >0 ) {
+                    explr.iShellTop--;
+                    explr.iShellBottom--;
+                    vShowContent();
+                    move( explr.iCursesY , explr.iCursesX );
+                }
+                break;
             case KEY_DOWN :
-                if( explr.iCursesY+1 < (explr.iContentDir+explr.iContentFile) ) move( ++explr.iCursesY , explr.iCursesX );break;
+                if( explr.iCursesY+1 < explr.iShellBottom-explr.iShellTop ) move( ++explr.iCursesY , explr.iCursesX );
+                else if( explr.iShellBottom < explr.iContentDir+explr.iContentFile ){
+                    explr.iShellTop++;
+                    explr.iShellBottom++;
+                    vShowContent();
+                    move( explr.iCursesY , explr.iCursesX );
+                }
+                break;
             case KEY_LEFT :
                 if( explr.iCursesX-1 >=0 ) move( explr.iCursesY , --explr.iCursesX );break;
             case KEY_RIGHT :
@@ -160,15 +185,13 @@ void vOutPut(){
 int iChDir(){
     int i=0;
     Node *point;
-    if( explr.iCursesY < explr.iContentDir ){
-        for(i=0,point=explr.pDirHead->next;i<explr.iCursesY;i++){
+    if( explr.iCursesY+explr.iShellTop < explr.iContentDir ){
+        for( i=0,point=explr.pDirHead->next;i<explr.iCursesY+explr.iShellTop;i++ ){
             point=point->next;
         }
         chdir(point->pContent);
     }else{ 
-//        for(i=0,point=explr.pFileHead->next;i<explr.iCursesY-explr.iContentDir;i++){
-//            point=point->next;
-//        }
+            //////选中文件，而不是目录时进行的操作
     }
     if(strcasecmp(point->pContent,".")==0)return 0;
     else return 1;
@@ -186,13 +209,18 @@ int main(int argc,char *argv[]){
     }
 
     vInit();
+    vGetWinSize(&explr);
     while(1){
         dirCurrentDir=opendir(".");
         vGetContent(dirCurrentDir);
         closedir(dirCurrentDir);
         vSortStr(explr.pDirHead);
         vSortStr(explr.pFileHead);
+        vGetWinSize(&explr);
         vShowContent();
+        move(0,0);
+        explr.iCursesY=0;
+        explr.iCursesX=0;
         vMainLoop();
 
         if(iChDir()==0)break;
