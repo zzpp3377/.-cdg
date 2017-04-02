@@ -23,6 +23,7 @@ struct explore{
     int iCursesY;
     int iShellTop;
     int iShellBottom;
+    int iShellRight;
     Node * pDirHead;
     Node * pFileHead;
     char path[100];
@@ -40,7 +41,7 @@ WINDOW * wndNewWindow=NULL;
 void vGetWinSize(struct explore * pexplr){
     struct winsize size;
     ioctl(STDIN_FILENO,TIOCGWINSZ,&size);
-//    *col=size.ws_col;
+    pexplr->iShellRight =size.ws_col;
     pexplr->iShellBottom =size.ws_row;
     pexplr->iShellTop=0;
 }
@@ -160,7 +161,7 @@ void vMainLoop(){
             case KEY_LEFT :
                 if( explr.iCursesX-1 >=0 ) move( explr.iCursesY , --explr.iCursesX );break;
             case KEY_RIGHT :
-                move( explr.iCursesY , ++explr.iCursesX );break;
+                if(explr.iCursesX<explr.iShellRight)move( explr.iCursesY , ++explr.iCursesX );break;
         }
         refresh();
     }
@@ -181,7 +182,7 @@ void vOutPut(){
 //-----------------------------------------------------
 //function : iChDir()
 //output: int flag //0----选择了“.” , 1----选择了非"."
-//-----------------------------------------------------
+//----------------------------------------------------
 int iChDir(){
     int i=0;
     Node *point;
