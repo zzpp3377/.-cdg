@@ -16,19 +16,22 @@ char *error[]={
     "can not find your path!\n"
 };
 
+struct explore{
+    int iContentDir;
+    int iContentFile;
+    int iCursesX;
+    int iCursesY;
+    int iShellTop;
+    int iShellBottom;
+    Node * pDirHead;
+    Node * pFileHead;
+    char path[100];
+};
 
-//char cContentDir[100][100]={0,0};
-int iContentDir=0;
-//char cContentFile[100][100]={0};
-int iContentFile=0;
-
-Node * pDirHead;
-Node * pFileHead;
+struct explore explr;
 
 WINDOW * wndNewWindow=NULL;
 
-int iCursesX=0;
-int iCursesY=0;
 
 //------------------------------------------------------
 //function: pGetWinSize
@@ -48,19 +51,17 @@ void vGetContent(DIR * dirCurrentDir){
     
     struct dirent * deCurrentDirEnt=NULL;
     struct stat statbuffer;
- 
+    explr.iContentDir=0;
+    explr.iContentFile=0;
     while((deCurrentDirEnt = readdir( dirCurrentDir )) != NULL){
         
         lstat(deCurrentDirEnt->d_name , &statbuffer);
-        if( 
-            S_ISDIR( statbuffer.st_mode ) ){
-//            sprintf( cContentDir[iContentDir] , "%s" , deCurrentDirEnt->d_name);
-            iPushStr(pDirHead,deCurrentDirEnt->d_name);
-            iContentDir++;
+        if( S_ISDIR( statbuffer.st_mode ) ){
+            iPushStr(explr.pDirHead,deCurrentDirEnt->d_name);
+            explr.iContentDir++;
         }else {
-//            sprintf( cContentFile[iContentFile] , "%s" , deCurrentDirEnt->d_name);
-            iPushStr(pFileHead,deCurrentDirEnt->d_name);
-            iContentFile++;
+            iPushStr(explr.pFileHead,deCurrentDirEnt->d_name);
+            explr.iContentFile++;
         }
 
     }
@@ -74,13 +75,14 @@ void vShowContent(){
     int i=0;
     int col,row;
     Node* point;
-    point =pDirHead;
+    point =explr.pDirHead;
+    clear();
     while(point->next!=NULL){
         point=point->next;
         mvprintw(i,0,"%s/",(char*)point->pContent);
         i++;
     }
-    point =pFileHead;
+    point =explr.pFileHead;
     while(point->next!=NULL){
         point=point->next;
         mvprintw(i,0,"%s",(char*)point->pContent);
@@ -88,8 +90,8 @@ void vShowContent(){
     }
     
     move(0,0);
-    iCursesY = 0;
-    iCursesX = 0;
+    explr.iCursesY = 0;
+    explr.iCursesX = 0;
     refresh();
 }
 
@@ -101,18 +103,18 @@ void vInit(){
     keypad(stdscr,true);
     noecho();
 
-    pDirHead=pCreateList();
-    pFileHead=pCreateList();
+    explr.pDirHead=pCreateList();
+    explr.pFileHead=pCreateList();
 }
 
 //----------------------------------------------------
 //function : vEndWindow
 //---------------------------------------------------
 void vEnd(){
-    while(!iIsEmptyStr(pDirHead))pPopStr(pDirHead);
-    while(!iIsEmptyStr(pFileHead))pPopStr(pFileHead);
-    iDeleteListStr(pDirHead); 
-    iDeleteListStr(pFileHead);
+//    while(!iIsEmptyStr(explr.pDirHead))pPopStr(explr.pDirHead);
+//    while(!iIsEmptyStr(explr.pFileHead))pPopStr(explr.pFileHead);
+    iDeleteListStr(explr.pDirHead); 
+    iDeleteListStr(explr.pFileHead);
 
     endwin();
 }
@@ -127,13 +129,13 @@ void vMainLoop(){
         
         switch( key ){
             case KEY_UP  :
-                if( iCursesY-1 >=0 ) move( --iCursesY , iCursesX );break;
+                if( explr.iCursesY-1 >=0 ) move( --explr.iCursesY , explr.iCursesX );break;
             case KEY_DOWN :
-                if( iCursesY+1 < (iContentDir+iContentFile) ) move( ++iCursesY , iCursesX );break;
+                if( explr.iCursesY+1 < (explr.iContentDir+explr.iContentFile) ) move( ++explr.iCursesY , explr.iCursesX );break;
             case KEY_LEFT :
-                if( iCursesX-1 >=0 ) move( iCursesY , --iCursesX );break;
+                if( explr.iCursesX-1 >=0 ) move( explr.iCursesY , --explr.iCursesX );break;
             case KEY_RIGHT :
-                move( iCursesY , ++iCursesX );break;
+                move( explr.iCursesY , ++explr.iCursesX );break;
         }
         refresh();
     }
@@ -142,31 +144,35 @@ void vMainLoop(){
 //function : vOutPut
 //--------------------------------------------------
 void vOutPut(){
-    int i=0;
-    Node * point=NULL;
     char * home=getenv("HOME");
+    if( getcwd(explr.path,100)==NULL ) exit(1);
     chdir(home);
     int file = open("tempexplore",O_WRONLY|O_CREAT,S_IWUSR|S_IREAD);
-    if(iCursesY<iContentDir){
-        for(i=0,point=pDirHead->next;i<iCursesY;i++){
-            point=point->next;
-        }
-        write(file,"d\n",2);
-        write(file,(char*)point->pContent,strlen((char*)point->pContent));
-        write(file,"\n",1);
-    }else{ 
-        for(i=0,point=pFileHead->next;i<iCursesY-iContentDir;i++){
-            point=point->next;
-        }
-        write(file,"f\n",2);
-        write(file,(char*)point->pContent,strlen((char*)point->pContent));
-        write(file,"\n",1);
-        
-    }
+    write(file,explr.path,strlen(explr.path));
+    write(file,"\n",1);
     close(file);
     file=-1;
 }
-
+//-----------------------------------------------------
+//function : iChDir()
+//output: int flag //0----选择了“.” , 1----选择了非"."
+//-----------------------------------------------------
+int iChDir(){
+    int i=0;
+    Node *point;
+    if( explr.iCursesY < explr.iContentDir ){
+        for(i=0,point=explr.pDirHead->next;i<explr.iCursesY;i++){
+            point=point->next;
+        }
+        chdir(point->pContent);
+    }else{ 
+//        for(i=0,point=explr.pFileHead->next;i<explr.iCursesY-explr.iContentDir;i++){
+//            point=point->next;
+//        }
+    }
+    if(strcasecmp(point->pContent,".")==0)return 0;
+    else return 1;
+}
 //-------------------------------------------------------
 //function : main()
 //-------------------------------------------------------
@@ -180,14 +186,19 @@ int main(int argc,char *argv[]){
     }
 
     vInit();
-    vGetContent(dirCurrentDir);
-    closedir(dirCurrentDir);
-    vSortStr(pDirHead);
-    vSortStr(pFileHead);
-    vShowContent();
-   
+    while(1){
+        dirCurrentDir=opendir(".");
+        vGetContent(dirCurrentDir);
+        closedir(dirCurrentDir);
+        vSortStr(explr.pDirHead);
+        vSortStr(explr.pFileHead);
+        vShowContent();
+        vMainLoop();
 
-    vMainLoop();
+        if(iChDir()==0)break;
+        while(!iIsEmptyStr(explr.pDirHead))pPopStr(explr.pDirHead);
+        while(!iIsEmptyStr(explr.pFileHead))pPopStr(explr.pFileHead);
+    }
     vOutPut();
     vEnd();
     exit(0);
