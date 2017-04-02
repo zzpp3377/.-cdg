@@ -1,0 +1,65 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+INCLUDE	makefile	/^INCLUDE=.\/include$/;"	m
+Node	include/list.h	/^typedef struct Node{$/;"	s
+Node	include/list.h	/^} Node;  $/;"	t	typeref:struct:Node
+Node	list/list.h	/^typedef struct Node{$/;"	s
+Node	list/list.h	/^} Node;  $/;"	t	typeref:struct:Node
+_stdlib_h_	include/list.h	3;"	d
+_stdlib_h_	list/list.h	3;"	d
+_strList_h_	include/strList.h	2;"	d
+_strList_h_	list/strList.h	2;"	d
+cContentDir	explore.c	/^char cContentDir[100][100]={0,0};$/;"	v
+cContentFile	explore.c	/^char cContentFile[100][100]={0};$/;"	v
+error	explore.c	/^char *error[]={$/;"	v
+iAddLast	list.c	/^int iAddLast( Node* head,void* pContent){$/;"	f
+iAddLast	list/list.c	/^int iAddLast( Node* head,void* pContent){$/;"	f
+iContentDir	explore.c	/^int iContentDir=0;$/;"	v
+iContentFile	explore.c	/^int iContentFile=0;$/;"	v
+iCursesX	explore.c	/^int iCursesX=0;$/;"	v
+iCursesY	explore.c	/^int iCursesY=0;$/;"	v
+iDeleteList	list.c	/^int iDeleteList( Node* head ){$/;"	f
+iDeleteList	list/list.c	/^int iDeleteList( Node* head ){$/;"	f
+iDeleteListStr	list/strList.c	/^int iDeleteListStr(Node* head){$/;"	f
+iDeleteListStr	strList.c	/^int iDeleteListStr(Node* head){$/;"	f
+iInsert	list.c	/^int iInsert( Node *head, int index, void * pContent){$/;"	f
+iInsert	list/list.c	/^int iInsert( Node *head, int index, void * pContent){$/;"	f
+iIsEmpty	list.c	/^int iIsEmpty(Node * head){$/;"	f
+iIsEmpty	list/list.c	/^int iIsEmpty(Node * head){$/;"	f
+iIsEmptyStr	strList.c	/^int iIsEmptyStr(Node* head){$/;"	f
+iPush	list.c	/^int iPush( Node* head, void* pContent ){$/;"	f
+iPush	list/list.c	/^int iPush( Node* head, void* pContent ){$/;"	f
+iPushStr	list/strList.c	/^int iPushStr(Node * head,char * str){$/;"	f
+iPushStr	strList.c	/^int iPushStr(Node * head,char * str){$/;"	f
+main	explore.c	/^int main(int argc,char *argv[]){$/;"	f
+main	list/test.c	/^int main(){$/;"	f
+next	include/list.h	/^    struct Node * next;$/;"	m	struct:Node	typeref:struct:Node::Node
+next	list/list.h	/^    struct Node * next;$/;"	m	struct:Node	typeref:struct:Node::Node
+pContent	include/list.h	/^    void * pContent;$/;"	m	struct:Node
+pContent	list/list.h	/^    void * pContent;$/;"	m	struct:Node
+pCreatStrList	strList.c	/^Node * pCreatStrList(){$/;"	f
+pCreateList	list.c	/^Node* pCreateList(){$/;"	f
+pCreateList	list/list.c	/^Node* pCreateList(){$/;"	f
+pDirHead	explore.c	/^Node * pDirHead;$/;"	v
+pFileHead	explore.c	/^Node * pFileHead;$/;"	v
+pPop	list.c	/^void * pPop(Node* head){$/;"	f
+pPop	list/list.c	/^void * pPop(Node* head){$/;"	f
+pPopStr	list/strList.c	/^char * pPopStr(Node* head){$/;"	f
+pPopStr	strList.c	/^char * pPopStr(Node* head){$/;"	f
+pRemove	list.c	/^void * pRemove( Node * head,int index ){$/;"	f
+pRemove	list/list.c	/^void * pRemove( Node * head,int index ){$/;"	f
+pRemoveLast	list.c	/^void* pRemoveLast(Node* head){$/;"	f
+pRemoveLast	list/list.c	/^void* pRemoveLast(Node* head){$/;"	f
+vEnd	explore.c	/^void vEnd(){$/;"	f
+vGetContent	explore.c	/^void vGetContent(DIR * dirCurrentDir){$/;"	f
+vInit	explore.c	/^void vInit(){$/;"	f
+vMainLoop	explore.c	/^void vMainLoop(){$/;"	f
+vOutPut	explore.c	/^void vOutPut(){$/;"	f
+vShowContent	explore.c	/^void vShowContent(){$/;"	f
+vSortStr	list/strList.c	/^void vSortStr(Node* head){$/;"	f
+vSortStr	strList.c	/^void vSortStr(Node* head){$/;"	f
+wndNewWindow	explore.c	/^WINDOW * wndNewWindow=NULL;$/;"	v

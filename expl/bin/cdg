@@ -1,0 +1,14 @@
+#!/bin/bash
+filename="123"
+while [ "$filename" != "." ]; do
+     explore
+     filetype=$(sed -n "1p" ~/tempexplore)
+     filename=$(sed -n "2p" ~/tempexplore)
+     rm ~/tempexplore
+     if [ "$filetype" = "f" ]
+     then
+         vim $filename
+     else
+        cd $filename
+     fi
+done
